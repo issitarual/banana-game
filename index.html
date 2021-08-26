@@ -18,7 +18,11 @@
     <title>BananaGame</title>
   </head>
   <body>
-    <canvas id="canvas"></canvas>
+    <canvas 
+        id="canvas"
+        onkeydown="moveAlien(e)"
+        onclick="startGame()"
+    ></canvas>
     <div class="score">
       <span class="heart">
         <img alt="heart" src="./sprites/heart.png" />
@@ -31,19 +35,57 @@
     <hr />
   </body>
   <script>
+      alert("Click to start!");
     const canvas = document.querySelector("#canvas");
     const context = canvas.getContext("2d");
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     canvas.width = screenWidth;
     canvas.height = screenHeight;
+    let horizontal = screenWidth/2 - 32;
+    document.onkeydown = moveAlien;
 
     const image = new Image(64, 97); 
-    image.onload = drawImage; // Draw when image has loaded
-
+    image.onload = drawAlien;
     image.src = "./sprites/alien.png";
-    function drawImage() {
-      context.drawImage(this, screenWidth/2 - 32, screenHeight - 125, 64, 97);
+
+    function clearScreen() {
+        context.clearRect(0, 0, screenWidth, screenHeight);
+    }
+
+    function alien(){
+        const image = new Image(64, 97); 
+        image.onload = drawAlien;
+        image.src = "./sprites/alien.png";
+    }
+
+    function drawAlien() {
+        clearScreen();
+      context.beginPath();
+      context.drawImage(this, horizontal, screenHeight - 125, 64, 97);
+    }
+
+    function moveAlien(e){
+        e = e || window.event;
+        if(horizontal < 5){
+            horizontal = 5;
+        }
+        if(horizontal > screenWidth - 70){
+            horizontal = screenWidth -70;
+        }
+        switch(e.keyCode) {
+            case 37:
+                horizontal-= 6;
+            break;
+            case 39:
+                horizontal+= 6;
+            break;
+        }
+        e.preventDefault();
+        alien();
+    }
+    function startGame(){
+        alien();
     }
   </script>
 </html>
