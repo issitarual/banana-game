@@ -18,11 +18,7 @@
     <title>BananaGame</title>
   </head>
   <body>
-    <canvas 
-        id="canvas"
-        onkeydown="moveAlien(e)"
-        onclick="startGame()"
-    ></canvas>
+    <canvas id="canvas" onkeydown="moveAlien(e)" onclick="startGame()"></canvas>
     <div class="score">
       <span class="heart">
         <img alt="heart" src="./sprites/heart.png" />
@@ -35,57 +31,81 @@
     <hr />
   </body>
   <script>
-      alert("Click to start!");
+    alert("Click to start!");
     const canvas = document.querySelector("#canvas");
     const context = canvas.getContext("2d");
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     canvas.width = screenWidth;
     canvas.height = screenHeight;
-    let horizontal = screenWidth/2 - 32;
+    let horizontal = screenWidth / 2 - 32;
+    let vertical = 0;
     document.onkeydown = moveAlien;
 
-    const image = new Image(64, 97); 
-    image.onload = drawAlien;
-    image.src = "./sprites/alien.png";
+    alien();
 
     function clearScreen() {
-        context.clearRect(0, 0, screenWidth, screenHeight);
+      context.clearRect(0, 0, screenWidth, screenHeight);
     }
 
-    function alien(){
-        const image = new Image(64, 97); 
-        image.onload = drawAlien;
-        image.src = "./sprites/alien.png";
+    function alien() {
+      const image = new Image(64, 97);
+      image.onload = drawAlien;
+      image.src = "./sprites/alien.png";
     }
 
     function drawAlien() {
-        clearScreen();
+      clearScreen();
       context.beginPath();
       context.drawImage(this, horizontal, screenHeight - 125, 64, 97);
     }
 
-    function moveAlien(e){
-        e = e || window.event;
-        if(horizontal < 5){
-            horizontal = 5;
-        }
-        if(horizontal > screenWidth - 70){
-            horizontal = screenWidth -70;
-        }
-        switch(e.keyCode) {
-            case 37:
-                horizontal-= 6;
-            break;
-            case 39:
-                horizontal+= 6;
-            break;
-        }
-        e.preventDefault();
-        alien();
+    function moveAlien(e) {
+      e = e || window.event;
+      if (horizontal < 5) {
+        horizontal = 5;
+      }
+      if (horizontal > screenWidth - 70) {
+        horizontal = screenWidth - 70;
+      }
+      switch (e.keyCode) {
+        case 37:
+          horizontal -= 6;
+          break;
+        case 39:
+          horizontal += 6;
+          break;
+      }
+      e.preventDefault();
+      alien();
     }
-    function startGame(){
-        alien();
+
+    function fruit() {
+      let fruitName;
+      let randomNumber = getRandomArbitrary(0, 1);
+      if(randomNumber <= 0.05) fruitName = 'banana';
+      else if(0.2 >= randomNumber > 0.05) fruitName = 'strawberry';
+      else if(0.4 >= randomNumber > 0.2) fruitName = 'watermelon';
+      else if(0.7 >= randomNumber > 0.4) fruitName = 'orange';
+      else if(randomNumber >= 0.7) fruitName = 'red-apple'
+      const image = new Image(64, 97);
+      image.onload = drawFruit;
+      image.src = `./sprites/${fruitName}.png`;
+    }
+
+    function drawFruit(){
+      const horizontalFruit = getRandomArbitrary(67, screenWidth - 67)
+      context.beginPath();
+      context.drawImage(this, horizontalFruit, 70, 67, 67);
+    }
+
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function startGame() {
+      alien();
+      fruit();
     }
   </script>
 </html>
