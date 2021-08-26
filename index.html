@@ -40,7 +40,13 @@
     canvas.height = screenHeight;
     let horizontal = screenWidth / 2 - 32;
     let vertical = 0;
+    let gameIntervalId;
+    let score;
+    let fruits;
+    let fruitSpeed;
     document.onkeydown = moveAlien;
+    let randomNumberFruit = getRandomArbitrary(0, 1);
+    let horizontalFruit = getRandomArbitrary(0, screenWidth - 67)
 
     alien();
 
@@ -55,7 +61,6 @@
     }
 
     function drawAlien() {
-      clearScreen();
       context.beginPath();
       context.drawImage(this, horizontal, screenHeight - 125, 64, 97);
     }
@@ -80,9 +85,8 @@
       alien();
     }
 
-    function fruit() {
+    function fruit(randomNumber) {
       let fruitName;
-      let randomNumber = getRandomArbitrary(0, 1);
       if(randomNumber <= 0.05) fruitName = 'banana';
       else if(0.2 >= randomNumber > 0.05) fruitName = 'strawberry';
       else if(0.4 >= randomNumber > 0.2) fruitName = 'watermelon';
@@ -92,20 +96,35 @@
       image.onload = drawFruit;
       image.src = `./sprites/${fruitName}.png`;
     }
+    let verticalFruit = 0;
+    let fruitInterval;
 
     function drawFruit(){
-      const horizontalFruit = getRandomArbitrary(67, screenWidth - 67)
+      verticalFruit+= 6;
       context.beginPath();
-      context.drawImage(this, horizontalFruit, 70, 67, 67);
+      context.drawImage(this, horizontalFruit, verticalFruit, 67, 67);
+    }
+
+    function move(){
+
     }
 
     function getRandomArbitrary(min, max) {
         return Math.random() * (max - min) + min;
     }
 
-    function startGame() {
+    function renderGame(){
+      clearScreen();
       alien();
-      fruit();
+      fruit(randomNumberFruit);
+    }
+
+
+    function startGame() {
+      score = 0;
+      clearInterval(gameIntervalId);
+      gameIntervalId = setInterval(() => renderGame(), 1000 / 60);
+      fruitInterval = setInterval(() => fruit(randomNumberFruit), 1000);
     }
   </script>
 </html>
