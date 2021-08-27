@@ -46,9 +46,41 @@
     let fruitSpeed;
     document.onkeydown = moveAlien;
     let randomNumberFruit = getRandomArbitrary(0, 1);
-    let horizontalFruit = getRandomArbitrary(0, screenWidth - 67)
+    let horizontalRandomFruit = getRandomArbitrary(0, screenWidth - 67);
+    let horizontalRandomBomb = getRandomArbitrary(0, screenWidth - 67);
+    let player = alien();
+    let verticalPosition = 0;
+    let fruitInterval;
+    
+    class Alien {
+      constructor(){
 
-    alien();
+      }
+      draw(){
+
+      }
+      alien(){
+
+      }
+    }
+
+    class Fruit {
+      constructor(){
+
+      }
+      draw(){
+
+      }
+    }
+
+    class Bomb {
+      constructor(){
+
+      }
+      draw(){
+
+      }
+    }
 
     function clearScreen() {
       context.clearRect(0, 0, screenWidth, screenHeight);
@@ -75,14 +107,13 @@
       }
       switch (e.keyCode) {
         case 37:
-          horizontal -= 6;
+          horizontal -= 8;
           break;
         case 39:
-          horizontal += 6;
+          horizontal += 8;
           break;
       }
       e.preventDefault();
-      alien();
     }
 
     function fruit(randomNumber) {
@@ -96,17 +127,23 @@
       image.onload = drawFruit;
       image.src = `./sprites/${fruitName}.png`;
     }
-    let verticalFruit = 0;
-    let fruitInterval;
 
     function drawFruit(){
-      verticalFruit+= 6;
+      verticalPosition+= 4;
       context.beginPath();
-      context.drawImage(this, horizontalFruit, verticalFruit, 67, 67);
+      context.drawImage(this, horizontalRandomFruit, verticalPosition, 67, 67);
     }
 
-    function move(){
+    function drawBomb(){
+      vertical+= 2;
+      context.beginPath();
+      context.drawImage(this, horizontalRandomBomb, verticalPosition, 67, 67);
+    }
 
+    function bomb(){
+      const image = new Image(67, 67);
+      image.onload = drawBomb;
+      image.src = "./sprites/bomb.png";
     }
 
     function getRandomArbitrary(min, max) {
@@ -117,14 +154,19 @@
       clearScreen();
       alien();
       fruit(randomNumberFruit);
+      bomb();
     }
 
 
     function startGame() {
       score = 0;
+      alien();
       clearInterval(gameIntervalId);
-      gameIntervalId = setInterval(() => renderGame(), 1000 / 60);
-      fruitInterval = setInterval(() => fruit(randomNumberFruit), 1000);
+      gameIntervalId = setInterval(() => renderGame(), 1000/60);
+      setInterval(() => {
+        bomb();
+        verticalPosition = 0;
+      }, 3000);
     }
   </script>
 </html>
