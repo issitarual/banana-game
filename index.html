@@ -39,8 +39,10 @@
     canvas.width = screenWidth;
     canvas.height = screenHeight;
     let horizontal = screenWidth / 2 - 32;
-    let vertical = 0;
+    let verticalBomb = 0;
+    let verticalFruit = 0;
     let gameIntervalId;
+    let bombInterval;
     let score;
     let fruits;
     let fruitSpeed;
@@ -129,15 +131,15 @@
     }
 
     function drawFruit(){
-      verticalPosition+= 4;
+      verticalFruit+= 4;
       context.beginPath();
-      context.drawImage(this, horizontalRandomFruit, verticalPosition, 67, 67);
+      context.drawImage(this, horizontalRandomFruit, verticalFruit, 67, 67);
     }
 
     function drawBomb(){
-      vertical+= 2;
+      verticalBomb+= 2;
       context.beginPath();
-      context.drawImage(this, horizontalRandomBomb, verticalPosition, 67, 67);
+      context.drawImage(this, horizontalRandomBomb, verticalBomb, 67, 67);
     }
 
     function bomb(){
@@ -163,13 +165,19 @@
       alien();
       clearInterval(gameIntervalId);
       gameIntervalId = setInterval(() => renderGame(), 1000/60);
-      setInterval(() => {
+      clearInterval(bombInterval);
+      bombInterval = setInterval(() => {
         bomb();
-        verticalPosition = 0;
+        verticalBomb = 0;
+        horizontalRandomBomb = getRandomArbitrary(0, screenWidth - 67);
+      }, 5000);
+      clearInterval(fruitInterval);
+      fruitInterval = setInterval(() => {
+        verticalFruit = 0;
         randomNumberFruit = getRandomArbitrary(0, 1);
         horizontalRandomFruit = getRandomArbitrary(0, screenWidth - 67);
-        horizontalRandomBomb = getRandomArbitrary(0, screenWidth - 67);
-      }, 3000);
+        fruit(randomNumberFruit);
+      }, 2700);
     }
   </script>
 </html>
